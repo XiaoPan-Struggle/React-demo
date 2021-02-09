@@ -36,3 +36,14 @@
     transform: rotate(360deg);
   }
 }
+
+
+.son{
+  width: 100%;
+  background-color: red;
+  font-size: 18px;
+}
+.grandson{
+  width: 100%;
+  background-color: yellow;
+}

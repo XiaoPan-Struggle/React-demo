@@ -1,17 +1,65 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
+import './App.css'
+
+function App() {
+    return (
+        <div className="App">
+            baba
+            <Son AppData='App的data' />
+        </div>
+    );
+}
+class Son extends React.Component{
+    constructor(props) {
+        super(props);
+        this.state={
+            n:0,
+            str:'123'
+        }
+    }
+    render() {
+        return (
+            <div className="son">
+                儿子：n:{this.state.n}
+                <div>{this.props.AppData}</div>
+                <button onClick={() => this.addN()}>+1</button>
+                <Grandson sonData={this.state.n} />
+            </div>
+        )
+    }
+    addN = () => {
+        this.setState({n:this.state.n+1})
+    }
+    add(){
+        //this.setState({n:this.state.n+=1})  setState是异步更新DOM
+        this.setState((state) => {
+            console.log(state);
+            return{n:state.n+1}
+        })
+        //setState会等一会改变state
+    }
+}
+let Grandson = (props) => {
+    const [n,setN] = React.useState(0)
+    return (
+        <div className="grandson">
+            孙子：n:{n}
+            <div>SonData:{props.sonData}</div>
+            <button onClick={() => setN(n+1)}>+1</button>
+        </div>
+    )
+    // setN永远不会改变n，会生成一个新的n
+}
+console.dir(React.useState);
+
 
 ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
-  document.getElementById('root')
+    <React.StrictMode>
+        <App />
+    </React.StrictMode>,
+    document.getElementById('root')
 );
 
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();
+
+
