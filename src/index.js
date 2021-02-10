@@ -15,16 +15,18 @@ class Son extends React.Component{
         super(props);
         this.state={
             n:0,
-            str:'123'
+            str:'123',
+            b:undefined
         }
     }
     render() {
         return (
             <div className="son">
                 儿子：n:{this.state.n}
+                孙子：b:{this.state.b}
                 <div>{this.props.AppData}</div>
                 <button onClick={() => this.addN()}>+1</button>
-                <Grandson sonData={this.state.n} />
+                <Grandson x={this.x.bind(this)} sonData={this.state.n} />
             </div>
         )
     }
@@ -39,6 +41,11 @@ class Son extends React.Component{
         })
         //setState会等一会改变state
     }
+    x(val){
+        this.setState(() => {
+            return {b:val}
+        })
+    }
 }
 let Grandson = (props) => {
     const [n,setN] = React.useState(0)
@@ -46,12 +53,16 @@ let Grandson = (props) => {
         <div className="grandson">
             孙子：n:{n}
             <div>SonData:{props.sonData}</div>
-            <button onClick={() => setN(n+1)}>+1</button>
+            <button onClick={() => {
+                setN(n+1)
+                props.x(n+1)
+            }}>+1</button>
         </div>
     )
     // setN永远不会改变n，会生成一个新的n
 }
 console.dir(React.useState);
+
 
 
 ReactDOM.render(
@@ -60,6 +71,7 @@ ReactDOM.render(
     </React.StrictMode>,
     document.getElementById('root')
 );
+
 
 
 
