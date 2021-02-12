@@ -16,12 +16,15 @@ class Son extends React.Component{
         this.state={
             n:0,
             str:'123',
-            b:undefined
+            b:undefined,
+            width:undefined
         }
+        this.divRef = React.createRef()
     }
     render() {
         return (
-            <div className="son">
+            <div ref={this.divRef} className="son">
+                <div>width:{this.state.width}</div>
                 儿子：n:{this.state.n}
                 孙子：b:{this.state.b}
                 <div>{this.props.AppData}</div>
@@ -30,6 +33,12 @@ class Son extends React.Component{
             </div>
         )
     }
+    componentDidMount() {
+        const div = this.divRef.current
+        const {width} = div.getBoundingClientRect()
+        this.setState({width})
+    }
+
     addN = () => {
         this.setState({n:this.state.n+1})
     }
