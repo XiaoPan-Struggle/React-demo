@@ -12,7 +12,21 @@ class App extends React.Component{
         this.setState({
             x:this.state.x+1
         })
+        this.setState({
+            x:this.state.x+1
+        })
+        // 这里设置两次+1，结果还是2，因为x还是1进行下面操作
     }
+    onClick2 = () => {
+        this.setState((state) => ({
+            x:state.x+1
+        }))
+        this.setState((state) =>({
+            x:state.x+1
+        }))
+        // 这种函数形式，就可以实现两次+1
+    }
+
 
     render() {
       return (
