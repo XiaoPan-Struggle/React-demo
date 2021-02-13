@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import useUpdate from "./useUpdate";
 import './App.css'
 
 function App() {
@@ -58,14 +59,22 @@ class Son extends React.Component{
 }
 let Grandson = (props) => {
     const [n,setN] = React.useState(0)
+    const onClick = () => {
+        setN(n+1)
+        props.x(n+1)
+    }
+
+    useUpdate(() => {
+        console.log('变了');
+    },n)
+    // useEffect(() => {
+    //     console.log('use');
+    // },[])
     return (
         <div className="grandson">
             孙子：n:{n}
             <div>SonData:{props.sonData}</div>
-            <button onClick={() => {
-                setN(n+1)
-                props.x(n+1)
-            }}>+1</button>
+            <button onClick={onClick}>+1</button>
         </div>
     )
     // setN永远不会改变n，会生成一个新的n
