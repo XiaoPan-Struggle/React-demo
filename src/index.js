@@ -2,6 +2,22 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import useUpdate from "./useUpdate";
 import './App.css'
+import {render} from "@testing-library/react";
+
+/*useState思想*/
+let _state = []
+let index = 0
+function myUseState(initialValue) {
+    const currentIndex = index
+    index += 1
+    _state[currentIndex] = _state[currentIndex] || initialValue
+    const setState = newState => {
+        _state[currentIndex] = newState;
+        render()
+    }
+    return [_state[currentIndex],setState]
+}
+
 
 function App() {
     return (
