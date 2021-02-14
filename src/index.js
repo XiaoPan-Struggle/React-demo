@@ -1,4 +1,4 @@
-import React from 'react';
+import React,{useReducer} from 'react';
 import ReactDOM from 'react-dom';
 import useUpdate from "./useUpdate";
 import './App.css'
@@ -17,10 +17,43 @@ function myUseState(initialValue) {
     return [_state[currentIndex],setState]
 }
 
+/*useReducer*/
+const initFormData = {
+    name:"",
+    age:18,
+    sex:"男"
+}
+function reducer(state,action){
+    switch (action.type) {
+        case "patch":
+            return {...state,...action.formData}
+        case "reset":
+            return initFormData
+        default:
+            throw new Error()
+    }
+}
+
+
 
 function App() {
+    const [formData,dispatch] = useReducer(reducer,initFormData)
     return (
         <div className="App">
+            <div>
+                <form>
+                    <div>
+                        <label>
+                            姓名：
+                            <input type="text" value={formData.name}
+                            onChange={
+                                e => dispatch({type:"patch",formData:{name:e.target.value}})
+                            }
+                            />
+                        </label>
+                    </div>
+                </form>
+            </div>
             baba
             <Son AppData='App的data' />
         </div>
@@ -74,10 +107,15 @@ class Son extends React.Component{
 }
 let Grandson = (props) => {
     const [n,setN] = React.useState(0)
+    const [obj,setObj] = React.useState({name:'pkc',age:21})
     const [x,setX] = myUseState(0)
     const onClick = () => {
         setN(n+1)
         setX(x+1)
+        setObj({
+            ...obj,
+            name:'yy'
+        })
         props.x(n+1)
     }
 
@@ -93,6 +131,7 @@ let Grandson = (props) => {
             <div>SonData:{props.sonData}</div>
             自定义usestate:{x}
             <button onClick={onClick}>+1</button>
+            对象：{obj.name}{obj.age}
         </div>
     )
     // setN永远不会改变n，会生成一个新的n
