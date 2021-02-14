@@ -2,7 +2,6 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import useUpdate from "./useUpdate";
 import './App.css'
-import {render} from "@testing-library/react";
 
 /*useState思想*/
 let _state = []
@@ -13,7 +12,7 @@ function myUseState(initialValue) {
     _state[currentIndex] = _state[currentIndex] || initialValue
     const setState = newState => {
         _state[currentIndex] = newState;
-        render()
+        // render()
     }
     return [_state[currentIndex],setState]
 }
@@ -75,8 +74,10 @@ class Son extends React.Component{
 }
 let Grandson = (props) => {
     const [n,setN] = React.useState(0)
+    const [x,setX] = myUseState(0)
     const onClick = () => {
         setN(n+1)
+        setX(x+1)
         props.x(n+1)
     }
 
@@ -90,6 +91,7 @@ let Grandson = (props) => {
         <div className="grandson">
             孙子：n:{n}
             <div>SonData:{props.sonData}</div>
+            自定义usestate:{x}
             <button onClick={onClick}>+1</button>
         </div>
     )
