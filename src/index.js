@@ -1,4 +1,4 @@
-import React,{useReducer} from 'react';
+import React,{useReducer,useMemo} from 'react';
 import ReactDOM from 'react-dom';
 import useUpdate from "./useUpdate";
 import Context from './Context'
@@ -133,10 +133,12 @@ class Son extends React.Component{
         })
     }
 }
-let Grandson = (props) => {
+function Grandson(props){
+    console.log('执行了');
     const [n,setN] = React.useState(0)
     const [obj,setObj] = React.useState({name:'pkc',age:21})
     const [x,setX] = myUseState(0)
+    const [m,seM] = React.useState(0)
     const onClick = () => {
         setN(n+1)
         setX(x+1)
@@ -146,10 +148,15 @@ let Grandson = (props) => {
         })
         props.x(n+1)
     }
-
-    useUpdate(() => {
+    const onClickChild = useMemo(() => {
+        console.log(m);
+    },[m])
+    React.useEffect(() => {
         console.log('变了');
-    },n)
+    },[n])
+    // useUpdate(() => {
+    //     console.log('变了');
+    // },n)
     // useEffect(() => {
     //     console.log('use');
     // },[])
@@ -160,12 +167,19 @@ let Grandson = (props) => {
             自定义usestate:{x}
             <button onClick={onClick}>+1</button>
             对象：{obj.name}{obj.age}
+            <Children1 data={m} onClick={onClickChild}/>
         </div>
     )
     // setN永远不会改变n，会生成一个新的n
 }
 console.dir(React.useState);
 
+function Children(props) {
+    console.log('child');
+    return <div onClick={props.onClick}>{props.data}</div>
+}
+
+const Children1 = React.memo(Children)
 
 
 ReactDOM.render(
