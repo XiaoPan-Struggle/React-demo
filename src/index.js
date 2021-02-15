@@ -35,30 +35,85 @@ function reducer(state,action){
 }
 
 
+// reducer+content 代替redux
+const store = {
+    user:null,
+    books:null
+}
+function reducerC(state, action) {
+    switch (action.type) {
+        case "setUser":
+            return {...state,user:action.user}
+        case "setBooks":
+            return {...state,books:action.books}
+        default:
+            throw new Error()
+    }
+}
+const Content = React.createContext(null)
 
 function App() {
     const [formData,dispatch] = useReducer(reducer,initFormData)
+    const [state,dispatchC] = useReducer(reducerC,store)
     return (
-        <div className="App">
-            <div>
-                <form>
-                    <div>
-                        <label>
-                            姓名：
-                            <input type="text" value={formData.name}
-                            onChange={
-                                e => dispatch({type:"patch",formData:{name:e.target.value}})
-                            }
-                            />
-                        </label>
-                    </div>
-                </form>
+        <Content.Provider value={{state,dispatchC}}>
+            <User/>
+            <Books/>
+            <div className="App">
+                <div>
+                    <form>
+                        <div>
+                            <label>
+                                姓名：
+                                <input type="text" value={formData.name}
+                                       onChange={
+                                           e => dispatch({type:"patch",formData:{name:e.target.value}})
+                                       }
+                                />
+                            </label>
+                        </div>
+                    </form>
+                </div>
+                baba
+                <Son AppData='App的data' />
             </div>
-            baba
-            <Son AppData='App的data' />
-        </div>
+        </Content.Provider>
     );
 }
+
+function User() {
+    const {state,dispatchC} = React.useContext(Content)
+    React.useEffect(() => {
+        ajax("/user").then(user => {
+            dispatchC({type:'setUser',user:user})
+        })
+    },[])
+    return(
+        <div>
+            <h1>个人信息</h1>
+            <div>姓名：{state.user ? state.user.name:""}</div>
+        </div>
+    )
+}
+function Books() {
+    const {state,dispatchC} = React.useContext(Content)
+    React.useEffect(() => {
+        ajax('/books').then(books => {
+            dispatchC({type:'setBooks',books:books})
+        })
+    },[])
+    return(
+        <div>
+            <h1>我的书籍</h1>
+            <div>书籍：{state.books ? state.books.map(book => <li
+            key={book.id}>{book.name}</li>):""}</div>
+        </div>
+    )
+}
+
+
+
+
 class Son extends React.Component{
     constructor(props) {
         super(props);
@@ -147,6 +202,34 @@ ReactDOM.render(
     document.getElementById('root')
 );
 
+
+// 帮助函数
+
+// 假 ajax
+// 两秒钟后，根据 path 返回一个对象，必定成功不会失败
+function ajax(path) {
+    return new Promise((resolve, reject) => {
+        setTimeout(() => {
+            if (path === "/user") {
+                resolve({
+                    id: 1,
+                    name: "XiaoPan"
+                });
+            } else if (path === "/books") {
+                resolve([
+                    {
+                        id: 1,
+                        name: "JavaScript 高级程序设计"
+                    },
+                    {
+                        id: 2,
+                        name: "JavaScript 语言精粹"
+                    }
+                ]);
+            }
+        }, 2000);
+    });
+}
 
 
 
