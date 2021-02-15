@@ -1,6 +1,9 @@
 import React,{useReducer} from 'react';
 import ReactDOM from 'react-dom';
 import useUpdate from "./useUpdate";
+import Context from './Context'
+import User from './component/user'
+import Books from "./component/books";
 import './App.css'
 
 /*useState思想*/
@@ -50,13 +53,12 @@ function reducerC(state, action) {
             throw new Error()
     }
 }
-const Content = React.createContext(null)
 
 function App() {
     const [formData,dispatch] = useReducer(reducer,initFormData)
     const [state,dispatchC] = useReducer(reducerC,store)
     return (
-        <Content.Provider value={{state,dispatchC}}>
+        <Context.Provider value={{state,dispatchC}}>
             <User/>
             <Books/>
             <div className="App">
@@ -77,39 +79,10 @@ function App() {
                 baba
                 <Son AppData='App的data' />
             </div>
-        </Content.Provider>
+        </Context.Provider>
     );
 }
 
-function User() {
-    const {state,dispatchC} = React.useContext(Content)
-    React.useEffect(() => {
-        ajax("/user").then(user => {
-            dispatchC({type:'setUser',user:user})
-        })
-    },[])
-    return(
-        <div>
-            <h1>个人信息</h1>
-            <div>姓名：{state.user ? state.user.name:""}</div>
-        </div>
-    )
-}
-function Books() {
-    const {state,dispatchC} = React.useContext(Content)
-    React.useEffect(() => {
-        ajax('/books').then(books => {
-            dispatchC({type:'setBooks',books:books})
-        })
-    },[])
-    return(
-        <div>
-            <h1>我的书籍</h1>
-            <div>书籍：{state.books ? state.books.map(book => <li
-            key={book.id}>{book.name}</li>):""}</div>
-        </div>
-    )
-}
 
 
 
@@ -202,34 +175,6 @@ ReactDOM.render(
     document.getElementById('root')
 );
 
-
-// 帮助函数
-
-// 假 ajax
-// 两秒钟后，根据 path 返回一个对象，必定成功不会失败
-function ajax(path) {
-    return new Promise((resolve, reject) => {
-        setTimeout(() => {
-            if (path === "/user") {
-                resolve({
-                    id: 1,
-                    name: "XiaoPan"
-                });
-            } else if (path === "/books") {
-                resolve([
-                    {
-                        id: 1,
-                        name: "JavaScript 高级程序设计"
-                    },
-                    {
-                        id: 2,
-                        name: "JavaScript 语言精粹"
-                    }
-                ]);
-            }
-        }, 2000);
-    });
-}
 
 
 
