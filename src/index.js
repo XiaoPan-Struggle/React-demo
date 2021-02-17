@@ -1,10 +1,23 @@
-import React,{useReducer,useMemo} from 'react';
+import React,{useReducer,useMemo,useRef} from 'react';
 import ReactDOM from 'react-dom';
 import useUpdate from "./useUpdate";
 import Context from './Context'
 import User from './component/user'
 import Books from "./component/books";
 import './App.css'
+
+function DemoRef() {
+    const buttonRef = React.useRef(null)
+    return(
+        <div className="App">
+            <Button3 ref={buttonRef}>按钮</Button3>
+        </div>
+    )
+}
+const Button2 = (props,ref) => {
+    return <button className="red" ref={ref} {...props} />
+}
+const Button3 = React.forwardRef(Button2)
 
 /*useState思想*/
 let _state = []
@@ -169,6 +182,7 @@ function Grandson(props){
             <button onClick={onClick}>+1</button>
             对象：{obj.name}{obj.age}
             <Children1 data={m} onClick={onClickChild}/>
+            <DemoRef/>
         </div>
     )
     // setN永远不会改变n，会生成一个新的n
