@@ -87,6 +87,7 @@ function App() {
 
 
 
+
 class Son extends React.Component{
     constructor(props) {
         super(props);
@@ -180,7 +181,6 @@ function Children(props) {
 }
 
 const Children1 = React.memo(Children)
-
 
 ReactDOM.render(
     <React.StrictMode>
